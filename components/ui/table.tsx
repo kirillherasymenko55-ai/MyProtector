@@ -112,4 +112,5 @@ export {
   TableHead,
   TableCell,
   TableCaption,
+  TableRow
 }

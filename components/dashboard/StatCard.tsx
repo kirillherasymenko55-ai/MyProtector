@@ -1,14 +1,33 @@
 "use client"
 
-import { LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import {
+  Users,
+  Building2,
+  Star,
+  FileText,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from 'lucide-react'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+
+const iconMap = {
+  users: Users,
+  building: Building2,
+  star: Star,
+  file: FileText,
+  'trending-up': TrendingUp,
+  'trending-down': TrendingDown,
+  minus: Minus,
+} as const
 
 interface StatCardProps {
   title: string
   value: string | number
   description?: string
-  icon: LucideIcon
+  icon: keyof typeof iconMap
   trend?: {
     value: number
     label: string
@@ -16,9 +35,20 @@ interface StatCardProps {
   className?: string
 }
 
-export function StatCard({ title, value, description, icon: Icon, trend, className }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  description,
+  icon,
+  trend,
+  className,
+}: StatCardProps) {
+
+  const IconComponent = iconMap[icon]
+
   const getTrendIcon = () => {
     if (!trend) return null
+
     if (trend.value > 0) return TrendingUp
     if (trend.value < 0) return TrendingDown
     return Minus
@@ -33,21 +63,32 @@ export function StatCard({ title, value, description, icon: Icon, trend, classNa
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <p className="text-3xl font-bold text-foreground">{value}</p>
+
             {description && (
               <p className="text-sm text-muted-foreground">{description}</p>
             )}
+
             {trend && (
-              <div className={cn(
-                "flex items-center gap-1 text-sm font-medium",
-                trend.value > 0 ? "text-green-600" : trend.value < 0 ? "text-red-600" : "text-muted-foreground"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center gap-1 text-sm font-medium",
+                  trend.value > 0
+                    ? "text-green-600"
+                    : trend.value < 0
+                    ? "text-red-600"
+                    : "text-muted-foreground"
+                )}
+              >
                 {TrendIcon && <TrendIcon className="h-4 w-4" />}
-                <span>{Math.abs(trend.value)}% {trend.label}</span>
+                <span>
+                  {Math.abs(trend.value)}% {trend.label}
+                </span>
               </div>
             )}
           </div>
+
           <div className="p-3 rounded-xl bg-primary/10">
-            <Icon className="h-6 w-6 text-primary" />
+            {IconComponent && <IconComponent className="h-6 w-6 text-primary" />}
           </div>
         </div>
       </CardContent>

@@ -97,8 +97,26 @@ async function getBusiness(slug: string): Promise<BusinessData | null> {
       },
     },
   })
+  if (!business) return null
 
-  return business as BusinessData | null
+  const safeBusiness = {
+    ...business,
+
+    // FIX DECIMAL HERE
+    trustScore: business.trustScore
+      ? Number(business.trustScore)
+      : 0,
+
+    // FIX REVIEWS TOO (important)
+    reviews: business.reviews.map((review) => ({
+      ...review,
+      rating: Number(review.rating),
+      helpfulCount: Number(review.helpfulCount),
+      reportCount: Number(review.reportCount),
+    })),
+  }
+
+  return safeBusiness
 }
 
 export async function generateMetadata({ params }: BusinessPageProps): Promise<Metadata> {
