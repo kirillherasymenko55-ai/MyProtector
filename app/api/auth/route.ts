@@ -172,7 +172,7 @@ async function handleRegister(body: { email: string; password: string; firstName
         userId: user.id,
         name: businessName || `${firstName || email}'s Business`,
         slug: businessName?.toLowerCase().replace(/\s+/g, '-') || `${email.split('@')[0]}-business`,
-        trafficLightStatus: 'RED',
+        trafficLightStatus: 'PENDING',
       },
     })
 

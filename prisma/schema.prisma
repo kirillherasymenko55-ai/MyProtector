@@ -36,6 +36,7 @@ enum TrafficLightStatus {
   RED
   AMBER
   GREEN
+  PENDING
 }
 
 enum ReviewStatus {
