@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import prisma from '@/lib/db'
 import { signIn } from '@/lib/auth'
-import { v4 as uuidv4 } from 'uuid'
 import { sendEmail, generateVerificationEmailHtml, generatePasswordResetHtml, generateWelcomeEmailHtml } from '@/lib/email'
 
 // Unified Auth API - Combines login, register, forgot-password, reset-password, verify-email
@@ -146,7 +145,7 @@ async function handleRegister(body: { email: string; password: string; firstName
   const passwordHash = await bcrypt.hash(password, 12)
 
   // Generate verification token
-  const verificationToken = uuidv4()
+  const verificationToken = crypto.randomUUID()
   const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
   // Create user
@@ -190,7 +189,7 @@ async function handleRegister(body: { email: string; password: string; firstName
     await prisma.reseller.create({
       data: {
         userId: user.id,
-        referralCode: uuidv4().substring(0, 8).toUpperCase(),
+        referralCode: crypto.randomUUID().substring(0, 8).toUpperCase(),
       },
     })
   }
@@ -236,7 +235,7 @@ async function handleForgotPassword(body: { email: string }) {
   }
 
   // Generate reset token
-  const resetToken = uuidv4()
+  const resetToken = crypto.randomUUID()
   const resetExpiry = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 
   await prisma.user.update({
