@@ -115,6 +115,8 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   deletedAt     DateTime? @map("deleted_at")
+  emailVerificationToken String?
+  emailVerificationExpiry DateTime?
 
   // Relations
   business           Business?
